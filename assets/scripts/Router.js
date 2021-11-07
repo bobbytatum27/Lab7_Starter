@@ -25,7 +25,7 @@ export class Router {
   }
 
   /**
-   * Adds a page name & function so to the router so that the function
+   * Adds a page name & function to the router so that the function
    * can be called later when the page is passed in
    * @param {String} page The name of the page to route to (this is used
    *                      as the page's hash as well in the URL)
@@ -38,6 +38,7 @@ export class Router {
      * router instance using the 'this' keyword. Substitute 'home' for the variable
      * page
      */
+    this[page] = pageFunc;
   }
 
   /**
@@ -48,7 +49,7 @@ export class Router {
    *                              'popstate' event instead of a normal card click
    */
   navigate(page, statePopped) {
-    console.log(`navigate() function called, requested page: ${page}`);
+    console.log(`navigate() function called, requested page: ${page} with statePopped == ${statePopped}`);
     /**
      * TODO - Part 1 - Step 4
      * Now, we are going to call the functions that we stored earlier based on 
@@ -65,5 +66,26 @@ export class Router {
      *     and URL + hash to history
      *  4. Finally, call the stored function for the given page
      */
+    // 1. 
+    if (this[page]) {
+      console.log(`Page ${page} exists in this with type ${typeof(this[page])}`);
+      // 2.
+      let hash;
+      if (page == 'home') {
+        hash = '';
+      } else {
+        hash = `#${page}`;
+        // 3.
+        if (!statePopped && (window.location.hash != hash)) {
+          console.log('not a popstate event + hash does not match');
+          history.pushState({'page': page}, '', window.location.pathname + hash);
+        }
+      }
+    } else {
+      console.log(`Error in navigate() function. Requested page ${page} does not exist in Router.`);
+      return;
+    }
+    // 4. 
+    this[page]();
   }
 }

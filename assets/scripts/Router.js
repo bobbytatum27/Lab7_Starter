@@ -70,16 +70,11 @@ export class Router {
     if (this[page]) {
       console.log(`Page ${page} exists in this with type ${typeof(this[page])}`);
       // 2.
-      let hash;
-      if (page == 'home') {
-        hash = '';
-      } else {
-        hash = `#${page}`;
-        // 3.
-        if (!statePopped && (window.location.hash != hash)) {
-          console.log('not a popstate event + hash does not match');
-          history.pushState({'page': page}, '', window.location.pathname + hash);
-        }
+      let hash = page == 'home' ? '' : `#${page}`;
+      // 3.
+      if (!statePopped && (window.location.hash != hash)) {
+        console.log('not a popstate event + hash does not match');
+        history.pushState({'page': page}, '', window.location.pathname + hash);
       }
     } else {
       console.log(`Error in navigate() function. Requested page ${page} does not exist in Router.`);
